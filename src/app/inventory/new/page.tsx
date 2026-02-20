@@ -198,27 +198,27 @@ export default function AddProductPage() {
                                 </div>
                             </div>
 
-                            {/* SKU + Barcode */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">SKU</label>
-                                    <div className={box()}>
-                                        <input type="text" placeholder="e.g. CAF-001" value={form.sku}
-                                            onChange={e => set("sku", e.target.value)}
-                                            className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                                    </div>
+                            {/* SKU */}
+                            <div className="space-y-1">
+                                <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">SKU</label>
+                                <div className={box()}>
+                                    <input type="text" placeholder="e.g. CAF-001" value={form.sku}
+                                        onChange={e => set("sku", e.target.value)}
+                                        className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
                                 </div>
-                                <div className="space-y-1">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Barcode</label>
-                                    <div className={`${box()} !pr-1.5`}>
-                                        <input type="text" placeholder="Scan or enter" value={form.barcode}
-                                            onChange={e => set("barcode", e.target.value)}
-                                            className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                                        <button type="button" onClick={() => setShowScanner(true)}
-                                            className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 active:opacity-70 transition-colors ml-1">
-                                            <ScanLine size={14} />
-                                        </button>
-                                    </div>
+                            </div>
+
+                            {/* Barcode — full width so the scan button always fits inside */}
+                            <div className="space-y-1">
+                                <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Barcode</label>
+                                <div className={`${box()} !pr-1.5`}>
+                                    <input type="text" placeholder="Scan or enter barcode" value={form.barcode}
+                                        onChange={e => set("barcode", e.target.value)}
+                                        className="flex-1 min-w-0 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
+                                    <button type="button" onClick={() => setShowScanner(true)}
+                                        className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 active:opacity-70 transition-colors ml-1">
+                                        <ScanLine size={14} />
+                                    </button>
                                 </div>
                             </div>
 
