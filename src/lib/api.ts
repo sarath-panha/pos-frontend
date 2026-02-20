@@ -6,7 +6,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const api = {
     getProducts: async (): Promise<Product[]> => {
         await delay(300);
-        return [...products];
+        return [...products.filter(p => p.is_active)];
     },
 
     getProduct: async (id: string): Promise<Product | undefined> => {
@@ -14,10 +14,27 @@ export const api = {
         return products.find(p => p.id === id);
     },
 
-    updateProductStock: async (id: string, newStock: number): Promise<void> => {
+    updateProductQty: async (id: string, newQty: number): Promise<void> => {
         await delay(300);
-        const updated = products.map(p => p.id === id ? { ...p, stock: newStock } : p);
+        const updated = products.map(p =>
+            p.id === id
+                ? { ...p, qty: newQty, updated_at: new Date().toISOString() }
+                : p
+        );
         updateProducts(updated);
+    },
+
+    addProduct: async (data: Omit<Product, "id" | "created_at" | "updated_at">): Promise<Product> => {
+        await delay(400);
+        const ts = new Date().toISOString();
+        const newProduct: Product = {
+            ...data,
+            id: `p${Date.now()}`,
+            created_at: ts,
+            updated_at: ts,
+        };
+        updateProducts([...products, newProduct]);
+        return newProduct;
     },
 
     createSale: async (items: CartItem[], paymentMethod: Sale["paymentMethod"]): Promise<Sale> => {
@@ -32,11 +49,11 @@ export const api = {
             timestamp: new Date().toISOString(),
         };
 
-        // Deduct stock
+        // Deduct qty
         const updatedProducts = products.map(p => {
             const soldItem = items.find(i => i.id === p.id);
             if (soldItem) {
-                return { ...p, stock: Math.max(0, p.stock - soldItem.quantity) };
+                return { ...p, qty: Math.max(0, p.qty - soldItem.quantity), updated_at: new Date().toISOString() };
             }
             return p;
         });
@@ -52,12 +69,10 @@ export const api = {
         const today = now.toISOString().split("T")[0];
         const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-        // Sum today's sales
         const totalSalesToday = sales
             .filter(s => s.timestamp.startsWith(today))
             .reduce((sum, s) => sum + s.totalAmount, 0);
 
-        // Sum week's sales
         const totalSalesWeek = sales
             .filter(s => new Date(s.timestamp) >= oneWeekAgo)
             .reduce((sum, s) => sum + s.totalAmount, 0);
@@ -65,17 +80,9 @@ export const api = {
         return {
             totalSalesToday,
             totalSalesWeek,
-            recentTransactions: [...sales].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 5),
+            recentTransactions: [...sales]
+                .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                .slice(0, 5),
         };
-    },
-
-    addProduct: async (data: Omit<Product, "id">): Promise<Product> => {
-        await delay(400);
-        const newProduct: Product = {
-            ...data,
-            id: `p${Date.now()}`,
-        };
-        updateProducts([...products, newProduct]);
-        return newProduct;
     },
 };

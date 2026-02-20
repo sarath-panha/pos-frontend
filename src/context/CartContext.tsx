@@ -24,7 +24,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setCart(prev => {
             const existing = prev.find(i => i.id === product.id);
             if (existing) {
-                if (existing.quantity >= product.stock) return prev;
+                if (existing.quantity >= product.qty) return prev;
                 return prev.map(i =>
                     i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
                 );
@@ -39,7 +39,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 .map(i => {
                     if (i.id !== id) return i;
                     const q = i.quantity + delta;
-                    return q <= 0 ? null as unknown as CartItem : { ...i, quantity: Math.min(q, i.stock) };
+                    return q <= 0 ? null as unknown as CartItem : { ...i, quantity: Math.min(q, i.qty) };
                 })
                 .filter(Boolean)
         );

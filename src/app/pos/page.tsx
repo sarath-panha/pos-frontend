@@ -6,9 +6,10 @@ import { Product } from "@/lib/types";
 import { useCart } from "@/context/CartContext";
 import {
     ShoppingBag, Plus, Minus, CreditCard,
-    Banknote, QrCode, CheckCircle2, X, Search
+    Banknote, QrCode, CheckCircle2, X, Search, ScanLine
 } from "lucide-react";
 import Image from "next/image";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 
 export default function POS() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -19,8 +20,24 @@ export default function POS() {
     const [paymentMethod, setPaymentMethod] = useState<"cash" | "card" | "qris">("cash");
     const [activeCategory, setActiveCategory] = useState("All");
     const [search, setSearch] = useState("");
+    const [scannerOpen, setScannerOpen] = useState(false);
+    const [scanFeedback, setScanFeedback] = useState("");
 
     const { cart, addToCart, updateQty, clearCart } = useCart();
+
+    const handleBarcodeScan = (code: string) => {
+        setScannerOpen(false);
+        const found = products.find(p => p.barcode === code || p.sku === code);
+        if (found && found.qty > 0) {
+            addToCart({ ...found, quantity: 1 });
+            setScanFeedback(`✓ ${found.name} added`);
+        } else if (found) {
+            setScanFeedback(`⚠ ${found.name} is out of stock`);
+        } else {
+            setScanFeedback(`Barcode not found: ${code}`);
+        }
+        setTimeout(() => setScanFeedback(""), 2500);
+    };
 
     const loadData = () =>
         api.getProducts().then(res => { setProducts(res); setLoading(false); });
@@ -66,6 +83,19 @@ export default function POS() {
 
     return (
         <div className="bg-surface">
+            {/* Scanner */}
+            {scannerOpen && (
+                <BarcodeScanner onScan={handleBarcodeScan} onClose={() => setScannerOpen(false)} />
+            )}
+
+            {/* Scan feedback toast */}
+            {scanFeedback && (
+                <div className="fixed top-[116px] left-4 right-4 z-40 max-w-lg mx-auto">
+                    <div className="bg-on-surface text-surface text-xs font-semibold px-4 py-3 rounded-xl text-center animate-in fade-in duration-200">
+                        {scanFeedback}
+                    </div>
+                </div>
+            )}
             {/* ── Search & Filter Bar ── */}
             <div className="sticky top-14 z-10 bg-surface border-b border-outline-variant px-4 pt-3 pb-3 space-y-2.5">
                 <div className="max-w-lg mx-auto space-y-2.5">
@@ -79,10 +109,17 @@ export default function POS() {
                             className="flex-1 bg-transparent border-none outline-none text-sm text-on-surface placeholder:text-on-surface-variant"
                         />
                         {search && (
-                            <button onClick={() => setSearch("")} className="text-on-surface-variant m3-press">
+                            <button onClick={() => setSearch("")} className="text-on-surface-variant">
                                 <X size={15} />
                             </button>
                         )}
+                        <button
+                            onClick={() => setScannerOpen(true)}
+                            className="text-on-surface-variant hover:text-primary transition-colors ml-0.5"
+                            aria-label="Scan barcode"
+                        >
+                            <ScanLine size={16} />
+                        </button>
                     </div>
                     <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">
                         {categories.map(cat => (
@@ -111,7 +148,7 @@ export default function POS() {
                     <div className="grid grid-cols-2 gap-3">
                         {displayed.map(product => {
                             const cartItem = cart.find(c => c.id === product.id);
-                            const oos = product.stock === 0;
+                            const oos = product.qty === 0;
                             const isSelected = Boolean(cartItem);
 
                             return (
@@ -165,7 +202,7 @@ export default function POS() {
                                                 {fmt(product.price)}
                                             </span>
                                             {!oos && (
-                                                <span className="text-[11px] text-on-surface-variant">{product.stock} left</span>
+                                                <span className="text-[11px] text-on-surface-variant">{product.qty} left</span>
                                             )}
                                         </div>
                                     </div>

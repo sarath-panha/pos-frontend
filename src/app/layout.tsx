@@ -32,7 +32,7 @@ export default function RootLayout({
         <ThemeProvider>
           <CartProvider>
             <Header />
-            <main className="pb-[calc(72px+env(safe-area-inset-bottom))] min-h-screen">
+            <main className="pb-[calc(72px+env(safe-area-inset-bottom))]">
               {children}
             </main>
             <Navigation />
