@@ -67,5 +67,15 @@ export const api = {
             totalSalesWeek,
             recentTransactions: [...sales].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 5),
         };
-    }
+    },
+
+    addProduct: async (data: Omit<Product, "id">): Promise<Product> => {
+        await delay(400);
+        const newProduct: Product = {
+            ...data,
+            id: `p${Date.now()}`,
+        };
+        updateProducts([...products, newProduct]);
+        return newProduct;
+    },
 };

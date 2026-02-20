@@ -34,8 +34,8 @@ export default function ReportPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-surface">
-            <div className="max-w-lg mx-auto px-4 py-5 pb-8 space-y-6 animate-in fade-in duration-300">
+        <div className="bg-surface">
+            <div className="max-w-lg mx-auto px-4 pt-5 pb-4 space-y-6 animate-in fade-in duration-300">
 
                 {/* Key Stats Grid */}
                 <div className="grid grid-cols-2 gap-3">

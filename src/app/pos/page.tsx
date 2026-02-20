@@ -65,7 +65,7 @@ export default function POS() {
     }
 
     return (
-        <div className="min-h-screen bg-surface">
+        <div className="bg-surface">
             {/* ── Search & Filter Bar ── */}
             <div className="sticky top-14 z-10 bg-surface border-b border-outline-variant px-4 pt-3 pb-3 space-y-2.5">
                 <div className="max-w-lg mx-auto space-y-2.5">
@@ -90,8 +90,8 @@ export default function POS() {
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
                                 className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold border transition-all m3-press ${activeCategory === cat
-                                        ? "bg-primary text-on-primary border-primary"
-                                        : "bg-transparent text-on-surface-variant border-outline-variant hover:border-outline"
+                                    ? "bg-primary text-on-primary border-primary"
+                                    : "bg-transparent text-on-surface-variant border-outline-variant hover:border-outline"
                                     }`}
                             >
                                 {cat}
@@ -102,7 +102,7 @@ export default function POS() {
             </div>
 
             {/* ── Product Grid ── */}
-            <div className="max-w-lg mx-auto px-4 py-4 pb-40">
+            <div className="max-w-lg mx-auto px-4 py-4 pb-24">
                 {displayed.length === 0 ? (
                     <div className="text-center py-16 text-on-surface-variant text-sm">
                         No products found.
@@ -120,10 +120,10 @@ export default function POS() {
                                     onClick={() => !oos && addToCart({ ...product, quantity: 1 })}
                                     disabled={oos}
                                     className={`text-left flex flex-col rounded-2xl border overflow-hidden transition-all duration-150 m3-press ${oos
-                                            ? "opacity-40 cursor-not-allowed border-outline-variant"
-                                            : isSelected
-                                                ? "border-primary/50 bg-primary-container/30"
-                                                : "border-outline-variant bg-surface-container-lowest hover:border-outline"
+                                        ? "opacity-40 cursor-not-allowed border-outline-variant"
+                                        : isSelected
+                                            ? "border-primary/50 bg-primary-container/30"
+                                            : "border-outline-variant bg-surface-container-lowest hover:border-outline"
                                         }`}
                                 >
                                     {/* Image */}
@@ -279,8 +279,8 @@ export default function POS() {
                                                 key={m.id}
                                                 onClick={() => setPaymentMethod(m.id)}
                                                 className={`flex flex-col items-center justify-center gap-1.5 py-2.5 rounded-xl border text-xs font-semibold transition-all m3-press ${paymentMethod === m.id
-                                                        ? "bg-primary-container border-primary text-on-primary-container"
-                                                        : "bg-surface-container-low border-outline-variant text-on-surface-variant"
+                                                    ? "bg-primary-container border-primary text-on-primary-container"
+                                                    : "bg-surface-container-low border-outline-variant text-on-surface-variant"
                                                     }`}
                                             >
                                                 <m.icon size={18} />

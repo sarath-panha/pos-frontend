@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { Product } from "@/lib/types";
 import { Plus, Minus, AlertTriangle, Search, X, PackageX } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Inventory() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -49,7 +50,7 @@ export default function Inventory() {
     }
 
     return (
-        <div className="min-h-screen bg-surface">
+        <div className="bg-surface">
             {/* ── Search & Filter Bar ── */}
             <div className="sticky top-14 z-10 bg-surface border-b border-outline-variant px-4 pt-3 pb-3 space-y-2.5">
                 <div className="max-w-lg mx-auto space-y-2.5">
@@ -76,8 +77,8 @@ export default function Inventory() {
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
                                 className={`whitespace-nowrap px-3 py-1 rounded-full text-xs font-semibold border transition-all m3-press ${activeCategory === cat
-                                        ? "bg-primary text-on-primary border-primary"
-                                        : "bg-transparent text-on-surface-variant border-outline-variant hover:border-outline"
+                                    ? "bg-primary text-on-primary border-primary"
+                                    : "bg-transparent text-on-surface-variant border-outline-variant hover:border-outline"
                                     }`}
                             >
                                 {cat}
@@ -87,7 +88,7 @@ export default function Inventory() {
                 </div>
             </div>
 
-            <div className="max-w-lg mx-auto px-4 py-4 pb-8 space-y-4">
+            <div className="max-w-lg mx-auto px-4 py-4 pb-4 space-y-4">
                 {/* ── Stock Alerts ── */}
                 {(outOfStock > 0 || lowStock > 0) && (
                     <div className="flex gap-2">
@@ -142,10 +143,10 @@ export default function Inventory() {
                                         )}
                                         {/* Stock badge */}
                                         <div className={`absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full border ${isOut
-                                                ? "bg-error-container text-on-error-container border-error/20"
-                                                : isLow
-                                                    ? "bg-surface-container text-on-surface-variant border-outline-variant"
-                                                    : "bg-primary-container text-on-primary-container border-primary/20"
+                                            ? "bg-error-container text-on-error-container border-error/20"
+                                            : isLow
+                                                ? "bg-surface-container text-on-surface-variant border-outline-variant"
+                                                : "bg-primary-container text-on-primary-container border-primary/20"
                                             }`}>
                                             {isOut ? "Empty" : isLow ? `${product.stock} low` : `${product.stock}`}
                                         </div>
@@ -185,6 +186,15 @@ export default function Inventory() {
                     </div>
                 )}
             </div>
+
+            {/* ── Add Product FAB ── */}
+            <Link
+                href="/inventory/new"
+                className="fixed bottom-[calc(72px+16px+env(safe-area-inset-bottom))] right-4 w-14 h-14 rounded-full bg-primary text-on-primary shadow-none border border-primary/20 flex items-center justify-center z-30 transition-opacity active:opacity-70"
+                aria-label="Add product"
+            >
+                <Plus size={24} strokeWidth={2.5} />
+            </Link>
         </div>
     );
 }

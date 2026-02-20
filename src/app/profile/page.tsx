@@ -33,7 +33,7 @@ export default function ProfilePage() {
     const { isDark, toggleDark } = useTheme();
 
     return (
-        <div className="min-h-screen bg-surface">
+        <div className="bg-surface">
             <div className="max-w-lg mx-auto px-4 py-5 pb-8 space-y-5 animate-in fade-in duration-300">
 
                 {/* ── Avatar Card ── */}
@@ -69,8 +69,8 @@ export default function ProfilePage() {
                                 aria-checked={isDark}
                                 role="switch"
                                 className={`relative w-12 h-6 rounded-full border-2 transition-all duration-300 focus:outline-none ${isDark
-                                        ? "bg-primary border-primary"
-                                        : "bg-surface-container border-outline"
+                                    ? "bg-primary border-primary"
+                                    : "bg-surface-container border-outline"
                                     }`}
                             >
                                 <span

@@ -28,8 +28,8 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-surface min-h-screen">
-      <div className="max-w-lg mx-auto px-4 py-5 pb-8 space-y-6 animate-in fade-in duration-300">
+    <div className="bg-surface">
+      <div className="max-w-lg mx-auto px-4 pt-5 pb-4 space-y-6 animate-in fade-in duration-300">
 
 
         {/* ── Stats ── */}
