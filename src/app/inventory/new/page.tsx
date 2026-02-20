@@ -118,31 +118,31 @@ export default function AddProductPage() {
                         />
                     </div>
 
-                    {/* Price — full width */}
-                    <div className="space-y-1">
-                        <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-                            Price <span className="text-error">*</span>
-                        </label>
-                        <div className={box(errors.price)}>
-                            <span className="text-on-surface-variant text-sm mr-1">$</span>
-                            <input type="number" step="0.01" min="0" placeholder="0.00" value={form.price}
-                                onChange={e => set("price", e.target.value)}
-                                className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
+                    {/* Price + Quantity */}
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                            <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                                Price <span className="text-error">*</span>
+                            </label>
+                            <div className={box(errors.price)}>
+                                <span className="text-on-surface-variant text-sm mr-1">$</span>
+                                <input type="number" step="0.01" min="0" placeholder="0.00" value={form.price}
+                                    onChange={e => set("price", e.target.value)}
+                                    className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
+                            </div>
+                            {errors.price && <p className="text-xs text-error">{errors.price}</p>}
                         </div>
-                        {errors.price && <p className="text-xs text-error">{errors.price}</p>}
-                    </div>
-
-                    {/* Qty — full width */}
-                    <div className="space-y-1">
-                        <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-                            Quantity <span className="text-error">*</span>
-                        </label>
-                        <div className={box(errors.qty)}>
-                            <input type="number" min="0" placeholder="0" value={form.qty}
-                                onChange={e => set("qty", e.target.value)}
-                                className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
+                        <div className="space-y-1">
+                            <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                                Quantity <span className="text-error">*</span>
+                            </label>
+                            <div className={box(errors.qty)}>
+                                <input type="number" min="0" placeholder="0" value={form.qty}
+                                    onChange={e => set("qty", e.target.value)}
+                                    className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
+                            </div>
+                            {errors.qty && <p className="text-xs text-error">{errors.qty}</p>}
                         </div>
-                        {errors.qty && <p className="text-xs text-error">{errors.qty}</p>}
                     </div>
 
                     {/* Category — single scrollable row */}
@@ -210,13 +210,13 @@ export default function AddProductPage() {
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Barcode</label>
-                                    <div className={box()}>
+                                    <div className={`${box()} !pr-1.5`}>
                                         <input type="text" placeholder="Scan or enter" value={form.barcode}
                                             onChange={e => set("barcode", e.target.value)}
                                             className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
                                         <button type="button" onClick={() => setShowScanner(true)}
-                                            className="text-primary ml-1 active:opacity-70">
-                                            <ScanLine size={16} />
+                                            className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 active:opacity-70 transition-colors ml-1">
+                                            <ScanLine size={14} />
                                         </button>
                                     </div>
                                 </div>
