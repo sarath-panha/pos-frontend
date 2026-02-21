@@ -77,7 +77,7 @@ export function BarcodeScanner({ onScan, onClose }: Props) {
     }, [supported, onScan, onClose, stopCamera]);
 
     return (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end">
             <div className="absolute inset-0 bg-black/60" onClick={handleClose} />
             <div className="relative bg-surface rounded-t-3xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300 max-h-[90vh]">
 

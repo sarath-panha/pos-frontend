@@ -35,3 +35,11 @@ export interface CashFlow {
     totalSalesWeek: number;
     recentTransactions: Sale[];
 }
+
+export interface Category {
+    id: string;          // e.g. "cat_1"
+    name: string;        // e.g. "Café"
+    slug: string;        // e.g. "cafe" — unique, URL-safe kebab-case
+    description: string; // optional free text
+    createdAt: string;   // ISO datetime
+}

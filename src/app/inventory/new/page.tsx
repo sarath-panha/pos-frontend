@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import { Check, ChevronRight, ScanLine } from "lucide-react";
+import { Check, ScanLine } from "lucide-react";
 import { BarcodeScanner } from "@/components/BarcodeScanner";
+import { FormField, InputBox } from "@/components/ui/FormField";
+import { FormAdvancedSection } from "@/components/inventory/FormAdvancedSection";
 
 const CATEGORIES = ["Café", "Pharmacy", "Retail", "Electronics", "Food & Beverage", "Other"];
-const UNITS = ["pcs", "kg", "gram", "liter", "ml", "box", "pack", "bottle", "tube", "bag"];
 
 type RawForm = {
     name: string; description: string; category: string;
@@ -72,10 +73,6 @@ export default function AddProductPage() {
         setTimeout(() => router.push("/inventory"), 900);
     };
 
-    // Shared input container class
-    const box = (err?: string) =>
-        `flex items-center h-11 bg-surface-container-lowest border rounded-xl px-3.5 transition-colors ${err ? "border-error" : "border-outline-variant focus-within:border-primary"}`;
-
     return (
         <div className="bg-surface">
             {/* Scanner modal */}
@@ -89,7 +86,6 @@ export default function AddProductPage() {
             <form onSubmit={handleSubmit} noValidate>
                 <div className="max-w-lg mx-auto px-4 pt-4 pb-6 space-y-4 animate-in fade-in duration-300">
 
-
                     {/* Image placeholder */}
                     <div className="w-full aspect-video bg-surface-container-low border border-outline-variant rounded-2xl flex flex-col items-center justify-center gap-1.5 text-on-surface-variant">
                         <ScanLine size={24} className="text-outline" />
@@ -97,167 +93,91 @@ export default function AddProductPage() {
                     </div>
 
                     {/* Name */}
-                    <div className="space-y-1">
-                        <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-                            Product Name <span className="text-error">*</span>
-                        </label>
-                        <div className={box(errors.name)}>
-                            <input type="text" placeholder="e.g. Coffee Beans 1kg" value={form.name}
+                    <FormField label="Product Name" required error={errors.name}>
+                        <InputBox error={errors.name}>
+                            <input
+                                type="text" placeholder="e.g. Coffee Beans 1kg" value={form.name}
                                 onChange={e => set("name", e.target.value)}
-                                className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                        </div>
-                        {errors.name && <p className="text-xs text-error">{errors.name}</p>}
-                    </div>
+                                className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant"
+                            />
+                        </InputBox>
+                    </FormField>
 
                     {/* Description */}
-                    <div className="space-y-1">
-                        <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Description</label>
-                        <textarea placeholder="Short description (optional)" value={form.description}
+                    <FormField label="Description">
+                        <textarea
+                            placeholder="Short description (optional)" value={form.description}
                             onChange={e => set("description", e.target.value)} rows={2}
                             className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-3.5 py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant outline-none resize-none focus:border-primary transition-colors"
                         />
-                    </div>
+                    </FormField>
 
                     {/* Price + Quantity */}
                     <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-                                Price <span className="text-error">*</span>
-                            </label>
-                            <div className={box(errors.price)}>
+                        <FormField label="Price" required error={errors.price}>
+                            <InputBox error={errors.price}>
                                 <span className="text-on-surface-variant text-sm mr-1">$</span>
-                                <input type="number" step="0.01" min="0" placeholder="0.00" value={form.price}
+                                <input
+                                    type="number" step="0.01" min="0" placeholder="0.00" value={form.price}
                                     onChange={e => set("price", e.target.value)}
-                                    className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                            </div>
-                            {errors.price && <p className="text-xs text-error">{errors.price}</p>}
-                        </div>
-                        <div className="space-y-1">
-                            <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-                                Quantity <span className="text-error">*</span>
-                            </label>
-                            <div className={box(errors.qty)}>
-                                <input type="number" min="0" placeholder="0" value={form.qty}
+                                    className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant"
+                                />
+                            </InputBox>
+                        </FormField>
+                        <FormField label="Quantity" required error={errors.qty}>
+                            <InputBox error={errors.qty}>
+                                <input
+                                    type="number" min="0" placeholder="0" value={form.qty}
                                     onChange={e => set("qty", e.target.value)}
-                                    className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                            </div>
-                            {errors.qty && <p className="text-xs text-error">{errors.qty}</p>}
-                        </div>
+                                    className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant"
+                                />
+                            </InputBox>
+                        </FormField>
                     </div>
 
-                    {/* Category — single scrollable row */}
+                    {/* Category */}
                     <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Category</label>
+                        <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                            Category
+                        </label>
                         <div className="flex gap-2 overflow-x-auto no-scrollbar">
                             {CATEGORIES.map(cat => (
-                                <button key={cat} type="button" onClick={() => set("category", cat)}
+                                <button
+                                    key={cat} type="button" onClick={() => set("category", cat)}
                                     className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all active:opacity-70 ${form.category === cat
-                                        ? "bg-primary text-on-primary border-primary"
-                                        : "bg-transparent text-on-surface-variant border-outline-variant"
-                                        }`}>
+                                            ? "bg-primary text-on-primary border-primary"
+                                            : "bg-transparent text-on-surface-variant border-outline-variant"
+                                        }`}
+                                >
                                     {cat}
                                 </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Advanced Details — link style */}
-                    <button
-                        type="button"
-                        onClick={() => setShowAdvanced(v => !v)}
-                        className="flex items-center gap-1 text-primary text-sm font-semibold active:opacity-70"
-                    >
-                        <ChevronRight
-                            size={15}
-                            className={`transition-transform duration-200 ${showAdvanced ? "rotate-90" : ""}`}
-                        />
-                        {showAdvanced ? "Hide advanced details" : "Advanced details"}
-                    </button>
-
-                    {showAdvanced && (
-                        <>
-                            {/* Cost + Unit */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Cost Price</label>
-                                    <div className={box()}>
-                                        <span className="text-on-surface-variant text-sm mr-1">$</span>
-                                        <input type="number" step="0.01" min="0" placeholder="0.00" value={form.cost}
-                                            onChange={e => set("cost", e.target.value)}
-                                            className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                                    </div>
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Unit</label>
-                                    <div className={box()}>
-                                        <select value={form.unit} onChange={e => set("unit", e.target.value)}
-                                            className="flex-1 bg-transparent outline-none text-sm text-on-surface">
-                                            {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* SKU */}
-                            <div className="space-y-1">
-                                <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">SKU</label>
-                                <div className={box()}>
-                                    <input type="text" placeholder="e.g. CAF-001" value={form.sku}
-                                        onChange={e => set("sku", e.target.value)}
-                                        className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                                </div>
-                            </div>
-
-                            {/* Barcode — full width so the scan button always fits inside */}
-                            <div className="space-y-1">
-                                <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Barcode</label>
-                                <div className={`${box()} !pr-1.5`}>
-                                    <input type="text" placeholder="Scan or enter barcode" value={form.barcode}
-                                        onChange={e => set("barcode", e.target.value)}
-                                        className="flex-1 min-w-0 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                                    <button type="button" onClick={() => setShowScanner(true)}
-                                        className="shrink-0 w-7 h-7 flex items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary/20 active:opacity-70 transition-colors ml-1">
-                                        <ScanLine size={14} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Low Stock + Supplier */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Low Stock Alert</label>
-                                    <div className={box()}>
-                                        <input type="number" min="0" placeholder="5" value={form.low_stock_level}
-                                            onChange={e => set("low_stock_level", e.target.value)}
-                                            className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                                    </div>
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Supplier</label>
-                                    <div className={box()}>
-                                        <input type="text" placeholder="Supplier name" value={form.supplier}
-                                            onChange={e => set("supplier", e.target.value)}
-                                            className="flex-1 bg-transparent outline-none text-sm text-on-surface placeholder:text-on-surface-variant" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Expiry Date */}
-                            <div className="space-y-1">
-                                <label className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Expiry Date</label>
-                                <div className={box()}>
-                                    <input type="date" value={form.expiry_date}
-                                        onChange={e => set("expiry_date", e.target.value)}
-                                        className="flex-1 bg-transparent outline-none text-sm text-on-surface" />
-                                </div>
-                            </div>
-                        </>
-                    )}
+                    {/* Advanced Details */}
+                    <FormAdvancedSection
+                        visible={showAdvanced}
+                        onToggle={() => setShowAdvanced(v => !v)}
+                        values={{
+                            cost: form.cost,
+                            unit: form.unit,
+                            sku: form.sku,
+                            barcode: form.barcode,
+                            low_stock_level: form.low_stock_level,
+                            supplier: form.supplier,
+                            expiry_date: form.expiry_date,
+                        }}
+                        onChange={set}
+                        onScanBarcode={() => setShowScanner(true)}
+                    />
 
                     {/* Submit */}
                     <div className="pt-1">
-                        <button type="submit" disabled={saving || saved}
-                            className="w-full py-3.5 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 border transition-all disabled:opacity-70 active:opacity-80 bg-primary text-on-primary border-primary/20">
+                        <button
+                            type="submit" disabled={saving || saved}
+                            className="w-full py-3.5 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 border transition-all disabled:opacity-70 active:opacity-80 bg-primary text-on-primary border-primary/20"
+                        >
                             {saved ? (
                                 <><Check size={17} /> Product Added!</>
                             ) : saving ? (
@@ -265,7 +185,6 @@ export default function AddProductPage() {
                             ) : "Add Product"}
                         </button>
                     </div>
-
                 </div>
             </form>
         </div>

@@ -1,4 +1,4 @@
-import { Product, Sale } from "./types";
+import { Product, Sale, Category } from "./types";
 
 const now = () => new Date().toISOString();
 const date = (d: string) => d;
@@ -91,3 +91,15 @@ export let sales: Sale[] = [
 
 export const updateProducts = (newProducts: Product[]) => { products = newProducts; };
 export const updateSales = (newSales: Sale[]) => { sales = newSales; };
+
+export let categories: Category[] = [
+    { id: "cat_1", name: "Café", slug: "cafe", description: "Coffee, drinks, and café consumables.", createdAt: "2026-01-01T00:00:00Z" },
+    { id: "cat_2", name: "Pharmacy", slug: "pharmacy", description: "Medicines, vitamins, and health products.", createdAt: "2026-01-01T00:00:00Z" },
+    { id: "cat_3", name: "Retail", slug: "retail", description: "General retail and personal care items.", createdAt: "2026-01-01T00:00:00Z" },
+    { id: "cat_4", name: "Electronics", slug: "electronics", description: "Electronic devices and accessories.", createdAt: "2026-01-01T00:00:00Z" },
+    { id: "cat_5", name: "Food & Beverage", slug: "food-beverage", description: "Packaged food and beverages.", createdAt: "2026-01-01T00:00:00Z" },
+    { id: "cat_6", name: "Other", slug: "other", description: "Miscellaneous products.", createdAt: "2026-01-01T00:00:00Z" },
+];
+
+export const updateCategories = (next: Category[]) => { categories = next; };
+

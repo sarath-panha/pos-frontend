@@ -1,5 +1,6 @@
-import { Product, Sale, CartItem, CashFlow } from "./types";
-import { products, sales, updateProducts, updateSales } from "./mockData";
+import { Product, Sale, CartItem, CashFlow, Category } from "./types";
+import { products, sales, updateProducts, updateSales, categories, updateCategories } from "./mockData";
+import { slugify, ensureUniqueSlug } from "./slugify";
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -85,4 +86,43 @@ export const api = {
                 .slice(0, 5),
         };
     },
+
+    // ── Categories ──────────────────────────────────────────────
+
+    getCategories: async (): Promise<Category[]> => {
+        await delay(200);
+        return [...categories];
+    },
+
+    addCategory: async (data: { name: string; slug: string; description: string }): Promise<Category> => {
+        await delay(300);
+        const base = data.slug || slugify(data.name);
+        const slug = ensureUniqueSlug(base, categories);
+        const cat: Category = {
+            id: `cat_${Date.now()}`,
+            name: data.name.trim(),
+            slug,
+            description: data.description.trim(),
+            createdAt: new Date().toISOString(),
+        };
+        updateCategories([...categories, cat]);
+        return cat;
+    },
+
+    updateCategory: async (id: string, data: { name: string; slug: string; description: string }): Promise<Category> => {
+        await delay(300);
+        const base = data.slug || slugify(data.name);
+        const slug = ensureUniqueSlug(base, categories, id);
+        const updated = categories.map(c =>
+            c.id === id ? { ...c, name: data.name.trim(), slug, description: data.description.trim() } : c
+        );
+        updateCategories(updated);
+        return updated.find(c => c.id === id)!;
+    },
+
+    deleteCategory: async (id: string): Promise<void> => {
+        await delay(300);
+        updateCategories(categories.filter(c => c.id !== id));
+    },
 };
+

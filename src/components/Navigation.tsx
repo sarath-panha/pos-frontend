@@ -36,8 +36,8 @@ export function Navigation() {
                         >
                             <div
                                 className={`flex items-center justify-center w-12 h-7 rounded-full transition-all duration-200 ${isActive
-                                        ? "bg-primary-container text-on-primary-container"
-                                        : "text-on-surface-variant"
+                                    ? "bg-primary-container text-on-primary-container"
+                                    : "text-on-surface-variant"
                                     }`}
                             >
                                 <Icon
